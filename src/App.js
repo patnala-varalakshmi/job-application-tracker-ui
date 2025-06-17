@@ -1,10 +1,10 @@
-import './App.css';
-import JobApplicationList from './components/JobApplicationList';
+import React from 'react';
+import ApplicationApp from './components/ApplicationApp';
 
 function App() {
   return (
     <div className="App">
-      <JobApplicationList />
+      <ApplicationApp />
     </div>
   );
 }
