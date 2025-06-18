@@ -3,6 +3,7 @@ import { api } from '../api';
 import { getStatusClass } from '../utils/statusColors';
 import { sortList } from '../utils/sortUtils'
 import { validateApplication } from '../validations/applicationValidation';
+import { formatDate } from '../helpers/dateHelpers'
 
 const ApplicationApp = () => {
   const [applications, setApplications] = useState([]);
@@ -140,35 +141,54 @@ const ApplicationApp = () => {
               </button>
             </div>
 
+            {applications.length > 0 ? (
+              <table className="table table-bordered table-hover mt-3">
+                <thead className="table-light">
+                  <tr>
+                    <th>Company Name</th>
+                    <th>Position</th>
+                    <th>Status</th>
+                    <th>Applied on</th>
+                    <th style={{ width: '150px' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedApplications.map((application) => (
+                    <tr key={application.id}>
+                      <td>{application.companyName}</td>
+                      <td>{application.position}</td>
+                      <td>
+                        <span className={`badge ${getStatusClass(application.status)}`}>
+                          {application.status}
+                        </span>
+                      </td>
+                      <td>{formatDate(application.createdAt)}</td>
+                      <td>
+                        <button
+                          className={`btn btn-sm me-2 ${
+                            isEditing && editingId === application.id
+                              ? "btn-secondary disabled"
+                              : "btn-warning"
+                          }`}
+                          onClick={() => handleEdit(application)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => deleteApplication(application.id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="text-muted mt-3">No applications found</div>
+            )}
 
-            <ul className="list-group">
-              {applications.length > 0 ? (
-                sortedApplications.map((application) => (
-                  <li key={application.id} className="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                      <h5>{application.companyName}</h5>
-                      <small className="text-muted">{application.position}</small>
-                      <small className={`badge mx-2 ${getStatusClass(application.status)}`}>{application.status}</small>
-                    </div>
-                    <div>
-                      <button 
-                        className={`btn btn-sm me-2 ${isEditing && editingId === application.id ? "disabled" : "btn-warning"}`}
-                        onClick={() => handleEdit(application)}>
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => deleteApplication(application.id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </li>
-                ))
-              ) : (
-                <li className="list-group-item text-muted">No applications found</li>
-              )}
-            </ul>
           </div>
         </div>
       </div>
